@@ -1,6 +1,7 @@
 const std = @import("std");
 const net = std.net;
 const UserData = @import("user_data.zig").UserData;
+const PacketSystem = @import("packet_system.zig")
 
 const ServerConfig = struct {
     port: u16 = 8080,
@@ -11,6 +12,12 @@ pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer _ = gpa.deinit();
     const allocator = gpa.allocator();
+
+    var server_packets = try PacketSystem.ServerPackets.init(allocator);
+    defer server_packets.deinit();
+
+    var client_packets = try PacketSystem.ClientPackets.init(allocator);
+    defer client_packets.deinit();
 
     const config = ServerConfig{};
 
